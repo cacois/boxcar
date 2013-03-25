@@ -2,6 +2,7 @@
 *.pyc
 *.log
 /cookbooks/*
+/test_app/*
 Vagrantfile
 .vagrant
 *.zip

@@ -7,11 +7,11 @@ from string import Template
 from zipfile import ZipFile
 import pymongo
 import time
-from InMemoryZip import InMemoryZip
 from pymongo import MongoClient
 import tarfile
 import os
 import logging
+import StringIO
 
 # logging stuff
 logger = logging.getLogger('boxcar')
@@ -194,7 +194,9 @@ def build_package(box, app_name, memory, recipes, port=None):
   for cb_dir in cookbook_dirs:
     logger.info('Writing cookbook %s to zip...' % cb_dir)
     write_dir_to_zip(cb_dir, zip, '/cookbooks/')
-    
+  
+  # write the app dir to the zip
+  zip.writestr('/%s/README.txt' % app_name, 'Hello from Boxcar! Put your application code in this directory.\n')
 
 def write_dir_to_zip(target_dir, zip, zip_path):
   """
