@@ -5,6 +5,8 @@ from django.conf.urls import patterns, include, url
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+	url(r'^$', 'boxcar.views.home'),
+	url(r'^template$', 'boxcar.views.template')
     # Examples:
     # url(r'^$', 'boxcar.views.home', name='home'),
     # url(r'^boxcar/', include('boxcar.foo.urls')),
