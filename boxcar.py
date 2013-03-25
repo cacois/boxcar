@@ -227,7 +227,8 @@ def write_dir_to_zip(target_dir, zip, zip_path):
 
 if __name__ == '__main__':
   r1 = Recipe( **db.boxcar_cookbooks.find_one({'name': 'apache2'}) )
-  r2 = Recipe( **db.boxcar_cookbooks.find_one({'name': 'django'}) )
-  logger.info('Recipes: {0}'.format( ', '.join([r1.name, r2.name]) ) )
+  r2 = Recipe( **db.boxcar_cookbooks.find_one({'name': 'python'}) )
+  r3 = Recipe( **db.boxcar_cookbooks.find_one({'name': 'django'}) )
+  logger.info('Recipes: {0}'.format( ', '.join([r1.name, r2.name, r3.name]) ) )
   logger.info('Generating environment...')
-  build_package(box='precise64', app_name='test_app', memory=512, recipes=[r1, r2], port=3000)
+  build_package(box='precise64', app_name='test_app', memory=512, recipes=[r1, r2, r3], port=3000)

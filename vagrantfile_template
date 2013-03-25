@@ -1,5 +1,5 @@
 Vagrant::Config.run do |config|
-  config.vm.box = $box
+  config.vm.box = "$box"
   $port_line
   config.vm.share_folder "$app_name", "/home/vagrant/$app_name", "$app_name"
 
