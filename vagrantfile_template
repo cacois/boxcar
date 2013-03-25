@@ -1,0 +1,14 @@
+Vagrant::Config.run do |config|
+  config.vm.box = $box
+  $port_line
+  config.vm.share_folder "$app_name", "/home/vagrant/$app_name", "$app_name"
+
+  # allow for symlinks in the $app_name folder
+  config.vm.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/$app_name", "1"]
+  config.vm.customize ["modifyvm", :id, "--memory", $memory]
+
+  config.vm.provision :chef_solo do |chef|
+    chef.cookbooks_path = "cookbooks"
+$recipe_lines
+  end
+end
