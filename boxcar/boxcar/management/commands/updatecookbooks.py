@@ -1,13 +1,22 @@
 from django.core.management.base import BaseCommand, CommandError
-from polls.models import Poll
 import requests
 import logging
 from pymongo import MongoClient
 import json
+from django.conf import settings
+
+# logging stuff
+logger = logging.getLogger('boxcar')
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.FileHandler('boxcar.log'))
+
+# mongodb stuff
+connection = MongoClient('localhost')
+db = connection.boxcar_cookbooks
 
 class Command(BaseCommand):
-    args = '<poll_id poll_id ...>'
-    help = 'Closes the specified poll for voting'
+    args = 'None'
+    help = 'Queries the Opscode Community API for all available Chef cookbooks from the opscode community site and stores records for each in mongodb.'
 
     def handle(self, *args, **options):
         """
@@ -31,8 +40,8 @@ class Command(BaseCommand):
 
         NOTE: May be missing one cookbook, but not sure
         """
-        logger.info('Updating cookbooks from %s: ' % BASE_URL)
-        res = requests.get(BASE_URL + 'cookbooks')
+        logger.info('Updating cookbooks from %s: ' % settings.COOKBOOK_API_BASE_URL)
+        res = requests.get(settings.COOKBOOK_API_BASE_URL + 'cookbooks')
         cookbooks = json.loads(res.content)
         num_books = int(cookbooks['total'])
         logger.info('Found %d cookbooks available' % num_books)
@@ -40,7 +49,7 @@ class Command(BaseCommand):
 
         while checked <= num_books:
             if checked != 0:
-                res = requests.get(BASE_URL + 'cookbooks', params = {'start' : checked+1} )
+                res = requests.get(settings.COOKBOOK_API_BASE_URL + 'cookbooks', params = {'start' : checked+1} )
                 cookbooks = json.loads(res.content)
 
             checked += len(cookbooks['items'])
