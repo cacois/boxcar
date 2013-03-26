@@ -1,5 +1,36 @@
 {% extends "base.html" %}
 
+{% block head %}
+
+	<script type="text/javascript">
+
+		$(document).ready(function(){
+
+			var search_term;
+			
+			$.ajax({
+				url: '{% url 'boxcar.views.get_cookbooks' %}',
+				data: {'search_term': search_term},
+				type: "POST",
+				dataType: "json",
+				success: function(response){
+
+				}
+			});
+
+			$(document).on("change", "#search_input", function(a, b, c){
+
+				console.log(a);
+				console.log(b);
+				console.log(c);
+			});
+
+		});
+
+	</script>
+
+{% endblock %}
+
 {% block content %}
 
 <div class="row">
@@ -18,9 +49,7 @@
 
 		<h3>Chef Recipes</h3>
 
-		<form>
-			<input type="text" placeholder="Search..." />
-		</form>
+		<input id="search_input" type="text" placeholder="Search..." />
 
 		<div class="cookbook_container"></div>
 
@@ -45,7 +74,7 @@
 		<button class="btn">Add Port</button>
 
 		<div class="forwarded_port_container"></div>
-		
+
 	</div>
 
 </div>
