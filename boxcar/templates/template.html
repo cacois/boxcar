@@ -25,9 +25,9 @@
 
 			});
 
-			$(document).on("change", "#search_input", function(e){
+			$(document).on("click", "#search", function(e){
 
-				var search_term = $(e.currentTarget).val();
+				var search_term = $("#search_input").val();
 
 				$.ajax({
 					url: '{% url 'boxcar.views.get_cookbooks' %}',
@@ -38,6 +38,8 @@
 
 					}
 				});
+
+				return false;
 			});
 
 		});
@@ -65,8 +67,8 @@
 		<div class="span4">
 
 			<h3>Chef Recipes</h3>
-
-			<input id="search_input" type="text" placeholder="Search..." /> <button class="btn">Search</button>
+			
+			<input id="search_input" type="text" placeholder="Search..." /><a id="search" class="btn">Search</a>
 
 			<div class="cookbook_container"></div>
 
