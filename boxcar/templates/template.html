@@ -36,6 +36,7 @@
 					dataType: "json",
 					success: function(response){
 
+						$(".cookbook_container").html(response);
 					}
 				});
 
@@ -51,6 +52,7 @@
 {% block content %}
 
 <form method="post" action="{% url 'boxcar.views.create_environment' %}">
+	{% csrf_token %}
 
 	<div class="row">
 
@@ -102,7 +104,7 @@
 
 		<div class="span12">
 
-			<a href="#" class="btn">Generate Environment</a>
+			<button class="btn">Generate Environment</a>
 
 		</div>
 

@@ -30,4 +30,6 @@ def get_cookbooks(request):
 
 def create_environment(request):
 
-  return HttpResponse(None, mimetype="application/json")
+    logger.info("POST: %s" %(request.POST))
+
+    return HttpResponse(None, mimetype="application/json")
