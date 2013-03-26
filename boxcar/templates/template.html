@@ -6,6 +6,25 @@
 
 		$(document).ready(function(){
 
+			$(document).on("click", ".remove_port", function(e){
+
+				$(e.currentTarget).parent().slideUp();
+
+				return false;
+			});
+
+			$(document).on("click", "#add_port", function(e){
+
+				var port_number = $(document).find("input[name='port_number']").val();
+
+				$(".forwarded_port_container").append("<div class='port_number_" + port_number + "'><span>" + port_number + " <a href='#' class='remove_port'>x</span></span></div>");
+
+				$(document).find("input[name='port_number']").val("");
+
+				return false;
+
+			});
+
 			$(document).on("change", "#search_input", function(e){
 
 				var search_term = $(e.currentTarget).val();
@@ -29,50 +48,64 @@
 
 {% block content %}
 
-<div class="row">
+<form method="post" action="{% url 'boxcar.views.create_environment' %}">
 
-	<div class="span4">
+	<div class="row">
 
-		<h3>Boxes</h3>
+		<div class="span4">
 
-		<div class="box_container"></div>
+			<h3>Boxes</h3>
 
-		<a href="#" class="btn">Add Box</a>
+			<div class="box_container"></div>
+
+			<a href="#" class="btn">Add Box</a>
+
+		</div>
+
+		<div class="span4">
+
+			<h3>Chef Recipes</h3>
+
+			<input id="search_input" type="text" placeholder="Search..." />
+
+			<div class="cookbook_container"></div>
+
+		</div>
+
+		<div class="span4">
+
+			<h3>Memory</h3>
+
+			<input type="text" name="memory_size" />
+
+			<select name="memory_size_unit">
+				<option value="MB">MB</option>
+				<option value="MB">GB</option>
+				<option value="MB">TB</option>
+			</select>
+
+			<h3>Forwarded Ports</h3>
+
+			<input type="text" name="port_number" />
+
+			<button id="add_port" class="btn">Add Port</button>
+
+			<div class="forwarded_port_container"></div>
+
+		</div>
 
 	</div>
 
-	<div class="span4">
+	<div class="row">
 
-		<h3>Chef Recipes</h3>
+		<div class="span12">
 
-		<input id="search_input" type="text" placeholder="Search..." />
+			<a href="#" class="btn">Generate Environment</a>
 
-		<div class="cookbook_container"></div>
-
-	</div>
-
-	<div class="span4">
-
-		<h3>Memory</h3>
-
-		<input type="text" name="memory_size" />
-
-		<select name="memory_size_unit">
-			<option value="MB">MB</option>
-			<option value="MB">GB</option>
-			<option value="MB">TB</option>
-		</select>
-
-		<h3>Forwarded Ports</h3>
-
-		<input type="text" name="port_number" />
-
-		<button class="btn">Add Port</button>
-
-		<div class="forwarded_port_container"></div>
+		</div>
 
 	</div>
 
-</div>
+</form>
 
 {% endblock %}
