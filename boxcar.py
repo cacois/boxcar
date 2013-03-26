@@ -11,7 +11,6 @@ from pymongo import MongoClient
 import tarfile
 import os
 import logging
-import StringIO
 
 # logging stuff
 logger = logging.getLogger('boxcar')
