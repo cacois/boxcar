@@ -9,20 +9,20 @@ logger = logging.getLogger(__name__)
 
 def home(request):
 
-	return render_to_response('home.html', {}, context_instance=RequestContext(request))
+    return render_to_response('home.html', {}, context_instance=RequestContext(request))
 
 def template(request):
 
-	return render_to_response('template.html', {}, context_instance=RequestContext(request))
+    return render_to_response('template.html', {}, context_instance=RequestContext(request))
 
 ## -- AJAX -- ##
 
 def get_cookbooks(request):
 
-	search_term = request.POST.get('search_term', '')
+    search_term = request.POST.get('search_term', '')
 
-	return HttpResponse(None, mimetype="application/json")
+    return HttpResponse(None, mimetype="application/json")
 
 def create_environment(request):
 
-	return HttpResponse(None, mimetype="application/json")
+    return HttpResponse(None, mimetype="application/json")

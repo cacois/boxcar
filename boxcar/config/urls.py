@@ -5,10 +5,10 @@ from django.conf.urls import patterns, include, url
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-	url(r'^$', 'boxcar.views.home'),
-	url(r'^template$', 'boxcar.views.template'),
-	url(r'^get_cookbooks/$', 'boxcar.views.get_cookbooks'),
-	url(r'^create_environment/$', 'boxcar.views.create_environment')
+    url(r'^$', 'boxcar.views.home'),
+    url(r'^template$', 'boxcar.views.template'),
+    url(r'^get_cookbooks/$', 'boxcar.views.get_cookbooks'),
+    url(r'^create_environment/$', 'boxcar.views.create_environment')
     # Examples:
     # url(r'^$', 'boxcar.views.home', name='home'),
     # url(r'^boxcar/', include('boxcar.foo.urls')),
