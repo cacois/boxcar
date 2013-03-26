@@ -6,23 +6,19 @@
 
 		$(document).ready(function(){
 
-			var search_term;
-			
-			$.ajax({
-				url: '{% url 'boxcar.views.get_cookbooks' %}',
-				data: {'search_term': search_term},
-				type: "POST",
-				dataType: "json",
-				success: function(response){
+			$(document).on("change", "#search_input", function(e){
 
-				}
-			});
+				var search_term = $(e.currentTarget).val();
 
-			$(document).on("change", "#search_input", function(a, b, c){
+				$.ajax({
+					url: '{% url 'boxcar.views.get_cookbooks' %}',
+					data: {'search_term': search_term},
+					type: "POST",
+					dataType: "json",
+					success: function(response){
 
-				console.log(a);
-				console.log(b);
-				console.log(c);
+					}
+				});
 			});
 
 		});
