@@ -24,8 +24,8 @@ def get_cookbooks(request):
   search_term = request.POST.get('search_term', '')
 
   # Ok, I have a search term. Let's search...
-  #recipes = Recipe( **db.boxcar_cookbooks.find_one({'name': search_term}) )
-  recipes = {}
+  recipes = Recipe( **db.boxcar_cookbooks.find_one({'name': search_term}) )
+  
   return HttpResponse(json.dumps(recipes), mimetype="application/json")
 
 def create_environment(request):
