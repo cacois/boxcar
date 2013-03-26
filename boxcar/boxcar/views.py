@@ -30,9 +30,6 @@ def get_cookbooks(request):
 
   # Ok, I have a search term. Let's search...
   recipes = db.boxcar_cookbooks.find_one({'name': search_term})
-  print 'recipes: ',recipes
-  print 'type(recipes)',type(recipes)
-  print 'json.dumps(recipes)',dumps(recipes)
   
   return HttpResponse(dumps(recipes), mimetype="application/json")
 
