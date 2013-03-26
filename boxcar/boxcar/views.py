@@ -1,7 +1,9 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse
+from boxcar.models import Recipe
 import logging
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -19,10 +21,13 @@ def template(request):
 
 def get_cookbooks(request):
 
-    search_term = request.POST.get('search_term', '')
+  search_term = request.POST.get('search_term', '')
 
-    return HttpResponse(None, mimetype="application/json")
+  # Ok, I have a search term. Let's search...
+  #recipes = Recipe( **db.boxcar_cookbooks.find_one({'name': search_term}) )
+  recipes = {}
+  return HttpResponse(json.dumps(recipes), mimetype="application/json")
 
 def create_environment(request):
 
-    return HttpResponse(None, mimetype="application/json")
+  return HttpResponse(None, mimetype="application/json")
