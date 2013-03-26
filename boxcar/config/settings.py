@@ -6,11 +6,11 @@ DJANGO_ROOT = os.path.dirname(os.path.realpath(django.__file__))
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 # Opscode config
-COOKBOOK_API_BASE_URL = https://cookbooks.opscode.com/api/v1/
+COOKBOOK_API_BASE_URL = 'https://cookbooks.opscode.com/api/v1/'
 
 # Temp download folder
 # Note: For now, make sure you manually create this directory before running Boxcar
-TMP_DIR = /tmp/boxcar/
+TMP_DIR = '/tmp/boxcar/'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
