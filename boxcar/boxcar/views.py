@@ -29,6 +29,7 @@ def get_cookbooks(request):
   search_term = request.POST.get('search_term', '')
 
   # Ok, I have a search term. Let's search...
+  # TODO: Make this a wildcard search that can return multiple results
   recipes = db.boxcar_cookbooks.find_one({'name': search_term})
   
   return HttpResponse(dumps(recipes), mimetype="application/json")
