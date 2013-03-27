@@ -30,9 +30,9 @@ def get_cookbooks(request):
 
   # Ok, I have a search term. Let's search...
   # TODO: Make this a wildcard search that can return multiple results
-  recipes = db.boxcar_cookbooks.find_one({'name': search_term})
-  
-  return HttpResponse(dumps(recipes), mimetype="application/json")
+  recipes = db.boxcar_cookbooks.find({'name': {'$regex':'^'+search_term}})
+
+  return HttpResponse(recipes, mimetype="application/json")
 
 def create_environment(request):
 

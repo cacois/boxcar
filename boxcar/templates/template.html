@@ -6,6 +6,30 @@
 
 		$(document).ready(function(){
 
+			// Initialize typeahead search field
+			/*$('.ajax-typeahead').typeahead({
+		    source: function (query, process) {
+    			return $.ajax({
+      			type: "POST",
+      			url: '{% url 'boxcar.views.get_cookbooks' %}',
+      			data: "{search_term: '" + query + "'}",
+      			contentType: "application/json; charset=utf-8",
+      			dataType: "json",
+      			success: function (cookbooks) {
+         			console.log(JSON.stringify(cookbooks));
+      			}
+    			});
+  			}
+			});*/
+			$('.ajax-typeahead').typeahead({
+		    source: function (query, process) {
+    	    return $.post('{% url 'boxcar.views.get_cookbooks' %}', {search_term: query }, function (cookbooks) {
+            console.log('Results: ' + JSON.stringify(cookbooks));
+            process(cookbooks)
+      	  });
+		    }
+			});
+
 			$(document).on("click", ".remove_port", function(e){
 
 				$(e.currentTarget).parent().slideUp();
@@ -35,6 +59,10 @@
 					type: "POST",
 					dataType: "json",
 					success: function(response){
+						for(var i = 0;i < response.length;i++) {
+							// create a thumbnail for each cookbook
+							$(".cookbook_container").append("<div class='well'>" + JSON.stringify(response[i]) + "</div>");
+						}
 
 						$(".cookbook_container").html(response);
 					}
@@ -70,7 +98,7 @@
 
 			<h3>Chef Recipes</h3>
 			
-			<input id="search_input" type="text" placeholder="Search..." /><a id="search" class="btn">Search</a>
+			<input id="search_input" type="text" class="ajax-typeahead" placeholder="Search..." /><a id="search" class="btn">Search</a>
 
 			<div class="cookbook_container"></div>
 
