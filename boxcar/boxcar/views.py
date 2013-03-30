@@ -4,7 +4,7 @@ from django.http import HttpResponse
 import logging
 import json
 from pymongo import MongoClient
-from bson.json_util import dumps
+from bson.json_util import dumps, default
 
 logger = logging.getLogger(__name__)
 
@@ -18,21 +18,25 @@ def home(request):
 
     return render_to_response('home.html', {}, context_instance=RequestContext(request))
 
-def template(request):
+def generate(request):
 
-    return render_to_response('template.html', {}, context_instance=RequestContext(request))
+    return render_to_response('generate.html', {}, context_instance=RequestContext(request))
 
 ## -- AJAX -- ##
 
 def get_cookbooks(request):
 
-  search_term = request.POST.get('search_term', '')
+    search_term = request.POST.get('search_term', '')
 
-  # Ok, I have a search term. Let's search...
-  # TODO: Make this a wildcard search that can return multiple results
-  recipes = db.boxcar_cookbooks.find({'name': {'$regex':'^'+search_term}})
+    # Ok, I have a search term. Let's search...
+    # TODO: Make this a wildcard search that can return multiple results
+    cursor = db.boxcar_cookbooks.find({'name': {'$regex':'^'+search_term}})
 
-  return HttpResponse(recipes, mimetype="application/json")
+    cookbooks = []
+    for c in cursor:
+        cookbooks.append(c['name'])
+
+    return HttpResponse(json.dumps(cookbooks))
 
 def create_environment(request):
 
