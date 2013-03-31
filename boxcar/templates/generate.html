@@ -6,14 +6,18 @@
 
 		$(document).ready(function(){
             var cookbooks = [];
+            var ports = [];
 
             add_cookbook = function(cookbook) {
-                console.log('Selected item: ' + cookbook);
+                console.log('Adding cookbook: ' + cookbook);
+
                 cookbooks.push(cookbook);
-                $(".cookbook_container").append("<div class=' well cookbook_" + cookbook + "'>" + cookbook + " <a href='#' class='remove_cookbook'>x</span></div>");
+                $(".cookbook_container").append("<div class=' well cookbook' id=" + cookbook + ">" + cookbook + " <a href='#' class='remove_cookbook'>x</span></div>");
+
+                console.log('Cookbooks: ' + cookbooks);
             };
 
-			$('.ajax-typeahead').typeahead({
+			$('.typeahead').typeahead({
 		        source: function(query, process) {
                     console.log('Posting...');
                     $.post('{% url 'boxcar.views.get_cookbooks' %}', {search_term: query}, function (data) {
@@ -30,29 +34,52 @@
             $(document).on("click", ".remove_cookbook", function(e){
 
                 $(e.currentTarget).parent().slideUp();
+                cookbook = $(e.currentTarget).parent().attr("id");
 
+                console.log('Removing cookbook: ' + cookbook);
+
+                cookbooks.splice( $.inArray(cookbook,cookbooks) ,1 );
+
+                console.log('Cookbooks: ' + cookbooks);
                 return false;
             });
 
             $(document).on("click", ".remove_port", function(e){
 
 				$(e.currentTarget).parent().slideUp();
-                //TODO: remote from cookbooks list
+                port = $(e.currentTarget).parent().parent().attr("id");
 
+                console.log('Removing port: ' + port);
+
+                ports.splice( $.inArray(port,ports) ,1 );
+
+                console.log('Ports: ' + ports);
 				return false;
 			});
 
 			$(document).on("click", "#add_port", function(e){
 
+                console.log('Adding port: ' + port_number);
+
 				var port_number = $(document).find("input[name='port_number']").val();
 
-				$(".forwarded_port_container").append("<div class='port_number_" + port_number + "'><span>" + port_number + " <a href='#' class='remove_port'>x</span></span></div>");
+				$(".forwarded_port_container").append("<div class='port_number' id=" + port_number + "><span>" + port_number + " <a href='#' class='remove_port'>x</span></span></div>");
 
 				$(document).find("input[name='port_number']").val("");
 
+                // add to ports array
+                ports.push(port_number);
+
+                console.log('Ports: ' + ports);
 				return false;
 
 			});
+
+            $(document).on("click", "#generate_env", function(e) {
+                memory = 512;
+                memory_unit = 'MB';
+                $.post('{% url 'boxcar.views.create_environment' %}', {ports: ports, cookbooks: cookbooks, memory: memory, memory_unit: memory_unit} );
+            });
 
 		});
 
@@ -81,7 +108,7 @@
 
 			<h3>Chef Recipes</h3>
 			
-			<input id="search_input" type="text" class="ajax-typeahead" placeholder="Search..." />
+			<input id="search_input" type="text" class="typeahead" placeholder="Search..." />
 
 			<div class="cookbook_container"></div>
 
@@ -96,7 +123,6 @@
 			<select name="memory_size_unit">
 				<option value="MB">MB</option>
 				<option value="GB">GB</option>
-				<option value="TB">TB</option>
 			</select>
 
 			<h3>Forwarded Ports</h3>
@@ -115,7 +141,7 @@
 
 		<div class="span12">
 
-			<button class="btn">Generate Environment</a>
+			<button class="btn" id="generate_env">Generate Environment</a>
 
 		</div>
 
