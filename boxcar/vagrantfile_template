@@ -1,6 +1,6 @@
 Vagrant::Config.run do |config|
   config.vm.box = "$box"
-  $port_line
+  $port_lines
   config.vm.share_folder "$app_name", "/home/vagrant/$app_name", "$app_name"
 
   # allow for symlinks in the $app_name folder

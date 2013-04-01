@@ -89,17 +89,6 @@
                 $.post('{% url 'boxcar.views.create_environment' %}', {ports: ports, cookbooks: cookbooks, memory: memory, memory_unit: memory_unit} );
             });
 
-            /*$('#generate_form').submit(function() { //listen for submit event
-                // add more parameters to the POST
-                $.each(params, function(i,param) {
-                    $('<input />').attr('type', 'hidden')
-                    .attr('name', param.name)
-                    .attr('value', param.value)
-                    .appendTo('#generate_form');
-                });
-                return true;
-            });*/
-
 		});
 
 	</script>
