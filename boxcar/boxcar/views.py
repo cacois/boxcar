@@ -6,6 +6,7 @@ import json
 from pymongo import MongoClient
 from bson.json_util import dumps, default
 import vagrantgen
+from boxcar.models import Recipe
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +63,6 @@ def create_environment(request):
         recipes.append(Recipe( **db.boxcar_cookbooks.find_one({'name': cookbook}) ))
 
     logger.info('Generating environment...')
-    vagrantgen.build_package(box='precise64', app_name='test_app', memory=512, recipes=recipes, port=3000)
+    vagrantgen.build_package(box=box, app_name='test_app', memory=memory_size, recipes=recipes, ports=ports)
 
     return HttpResponse("Create Environment", mimetype="application/json")

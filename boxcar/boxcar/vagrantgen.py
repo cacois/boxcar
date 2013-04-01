@@ -11,6 +11,8 @@ import os
 import logging
 from boxcar.models import Recipe
 
+logger = logging.getLogger(__name__)
+
 # config stuff
 config = ConfigParser.RawConfigParser()
 config.read('boxcar.cfg')
@@ -23,7 +25,7 @@ db = connection.boxcar_cookbooks
 # Constants
 BASE_URL = config.get('api', 'base_url')
 
-def build_package(box, app_name, memory, recipes, port=None):
+def build_package(box, app_name, memory, recipes, ports=None):
   """
   Builds a Vagrant environment in a zip file, including configured 
   Vagrantfile, chef cookbooks, and sample app directory
@@ -38,7 +40,7 @@ def build_package(box, app_name, memory, recipes, port=None):
   zip = ZipFile(zipname, 'w')
 
   # get the vagrantfile
-  vagrantfile = _generate_vagrantfile(box, app_name, memory, recipes, port)
+  vagrantfile = _generate_vagrantfile(box, app_name, memory, recipes, ports)
   logger.info('Adding Vagrantfile to zip...')
   zip.writestr('Vagrantfile', vagrantfile)
 
@@ -103,9 +105,10 @@ def _generate_vagrantfile(box, app_name, memory, recipes, ports=None):
   logger.info('Generating Vagrantfile')
 
   port_lines = ''
-  if port != None:
+  if ports != None:
+    print 'ports: ',ports
     for p in ports:
-      port_lines += '\n  config.vm.forward_port %s, %s\n' % (port, port)
+      port_lines += '\n  config.vm.forward_port %s, %s\n' % (p, p)
   
   logger.info('Configured port forwarding...')
 
