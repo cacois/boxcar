@@ -14,6 +14,9 @@
                 cookbooks.push(cookbook);
                 $(".cookbook_container").append("<div class=' well cookbook' id=" + cookbook + ">" + cookbook + " <a href='#' class='remove_cookbook'>x</span></div>");
 
+                // update form
+                $(document).find("input[name='cookbooks']").val(cookbooks);
+
                 console.log('Cookbooks: ' + cookbooks);
             };
 
@@ -40,6 +43,9 @@
 
                 cookbooks.splice( $.inArray(cookbook,cookbooks) ,1 );
 
+                // update form
+                $(document).find("input[name='cookbooks']").val(cookbooks);
+
                 console.log('Cookbooks: ' + cookbooks);
                 return false;
             });
@@ -52,6 +58,8 @@
                 console.log('Removing port: ' + port);
 
                 ports.splice( $.inArray(port,ports) ,1 );
+                // update form
+                $(document).find("input[name='ports']").val(ports);
 
                 console.log('Ports: ' + ports);
 				return false;
@@ -65,10 +73,10 @@
 
 				$(".forwarded_port_container").append("<div class='port_number' id=" + port_number + "><span>" + port_number + " <a href='#' class='remove_port'>x</span></span></div>");
 
-				$(document).find("input[name='port_number']").val("");
-
                 // add to ports array
                 ports.push(port_number);
+                // update form
+                $(document).find("input[name='ports']").val(ports);
 
                 console.log('Ports: ' + ports);
 				return false;
@@ -81,6 +89,17 @@
                 $.post('{% url 'boxcar.views.create_environment' %}', {ports: ports, cookbooks: cookbooks, memory: memory, memory_unit: memory_unit} );
             });
 
+            /*$('#generate_form').submit(function() { //listen for submit event
+                // add more parameters to the POST
+                $.each(params, function(i,param) {
+                    $('<input />').attr('type', 'hidden')
+                    .attr('name', param.name)
+                    .attr('value', param.value)
+                    .appendTo('#generate_form');
+                });
+                return true;
+            });*/
+
 		});
 
 	</script>
@@ -89,7 +108,7 @@
 
 {% block content %}
 
-<form method="post" action="{% url 'boxcar.views.create_environment' %}">
+<form id="generate_form" method="post" action="{% url 'boxcar.views.create_environment' %}">
 	{% csrf_token %}
 
 	<div class="row">
@@ -109,7 +128,7 @@
 			<h3>Chef Recipes</h3>
 			
 			<input id="search_input" type="text" class="typeahead" placeholder="Search..." />
-
+            <input type="hidden" name="cookbooks" />
 			<div class="cookbook_container"></div>
 
 		</div>
@@ -126,7 +145,7 @@
 			</select>
 
 			<h3>Forwarded Ports</h3>
-
+            <input type="hidden" name="ports" />
 			<input type="text" name="port_number" />
 
 			<button id="add_port" class="btn">Add Port</button>
@@ -141,7 +160,7 @@
 
 		<div class="span12">
 
-			<button class="btn" id="generate_env">Generate Environment</a>
+			<button class="btn" type="submit" id="generate_env">Generate Environment</a>
 
 		</div>
 
