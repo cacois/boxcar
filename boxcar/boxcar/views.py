@@ -48,14 +48,14 @@ def create_environment(request):
     memory_size = request.POST['memory_size']
     memory_size_unit = request.POST['memory_size_unit']
     ports = request.POST['ports'].split(',')
-    # TODO: Add box configuration to generate template, get value from POST
-    box = 'precise64'
+    base_box = request.POST['base_box_name']
+    app_name = 'app'
 
     print 'cookbooks: ',cookbooks
     print 'memory_size: ',memory_size
     print 'memory_size_unit: ',memory_size_unit
     print 'ports: ',ports
-    print 'box: ',box
+    print 'base_box: ',base_box
 
     logger.info('Gathering cookbooks...')
     recipes =[]
@@ -63,6 +63,6 @@ def create_environment(request):
         recipes.append(Recipe( **db.boxcar_cookbooks.find_one({'name': cookbook}) ))
 
     logger.info('Generating environment...')
-    vagrantgen.build_package(box=box, app_name='test_app', memory=memory_size, recipes=recipes, ports=ports)
+    vagrantgen.build_package(base_box=base_box, app_name=app_name, memory=memory_size, recipes=recipes, ports=ports)
 
     return HttpResponse("Create Environment", mimetype="application/json")

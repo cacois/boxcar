@@ -4,6 +4,9 @@ import django
 
 DJANGO_ROOT = os.path.dirname(os.path.realpath(django.__file__))
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
+#SITE_ROOT = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..'))
+print 'SITE_ROOT',SITE_ROOT
+
 
 # Opscode config
 COOKBOOK_API_BASE_URL = 'https://cookbooks.opscode.com/api/v1/'
@@ -73,7 +76,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..'))
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -84,7 +87,10 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(STATIC_ROOT, 'static/'),
 )
+
+print 'STATICFILES_DIRS',STATICFILES_DIRS
 
 # List of finder classes that know how to find static files in
 # various locations.

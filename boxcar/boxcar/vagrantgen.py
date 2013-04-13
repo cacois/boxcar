@@ -25,7 +25,7 @@ db = connection.boxcar_cookbooks
 # Constants
 BASE_URL = config.get('api', 'base_url')
 
-def build_package(box, app_name, memory, recipes, ports=None):
+def build_package(base_box, app_name, memory, recipes, ports=None):
   """
   Builds a Vagrant environment in a zip file, including configured 
   Vagrantfile, chef cookbooks, and sample app directory
@@ -33,6 +33,10 @@ def build_package(box, app_name, memory, recipes, ports=None):
 
   # get directory to download temp files to
   download_dir = config.get('local', 'download_base_dir')
+  
+  # if directory doesn't exist, create it
+  if not os.path.exists(download_dir):
+    os.makedirs(download_dir)
 
   # create a zip file
   zipname = app_name + '-env.zip'
@@ -40,7 +44,7 @@ def build_package(box, app_name, memory, recipes, ports=None):
   zip = ZipFile(zipname, 'w')
 
   # get the vagrantfile
-  vagrantfile = _generate_vagrantfile(box, app_name, memory, recipes, ports)
+  vagrantfile = _generate_vagrantfile(base_box, app_name, memory, recipes, ports)
   logger.info('Adding Vagrantfile to zip...')
   zip.writestr('Vagrantfile', vagrantfile)
 
@@ -77,10 +81,13 @@ def _download_cookbook(fileurl, download_dir):
 
   # download and save file to download_dir
   logger.info('Downloading: %s' % fileurl)
+  
   # get filename
   tarname = fileurl.split('/')[-1].split('?')[0]
   tarfilepath = download_dir + tarname
+
   logger.info('Writing file to %s' % tarfilepath)
+  
   with open(tarfilepath, 'w') as tmpfile:
     res = requests.get(fileurl)  
     for chunk in res.iter_content(256):

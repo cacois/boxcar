@@ -97,64 +97,99 @@
 
 {% block content %}
 
-<form id="generate_form" method="post" action="{% url 'boxcar.views.create_environment' %}">
-	{% csrf_token %}
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="brand" href="#">Boxcar</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="active">
+                        <a href="#">Home</a>
+                    </li>
+                    <li>
+                        <a href="#about">About</a>
+                    </li>
+                    <li>
+                        <a href="#contact">Generate</a>
+                    </li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
 
-	<div class="row">
+<div class="container">
+    <h1>
+        Boxcar
+    </h1>
+    <p>
+        Fill in the info below and we'll configure a downloadable Vagrant package,
+        just for you!
+    </p>
 
-		<div class="span4">
+    <form id="generate_form" method="post" action="{% url 'boxcar.views.create_environment' %}">
+    	{% csrf_token %}
 
-			<h3>Boxes</h3>
+    	<div class="row">
+    		<div class="span4">
+                <h3>Base Box Name</h3>
 
-			<div class="box_container"></div>
+                <input type="text" name="base_box_name" placeholder="Name of Vagrant base box..." />
 
-			<a href="#" class="btn">Add Box</a>
+    			<h3>Boxes</h3>
 
-		</div>
+    			<div class="box_container"></div>
 
-		<div class="span4">
+    			<a href="#" class="btn">Add Box</a>
 
-			<h3>Chef Recipes</h3>
-			
-			<input id="search_input" type="text" class="typeahead" placeholder="Search..." />
-            <input type="hidden" name="cookbooks" />
-			<div class="cookbook_container"></div>
+    		</div>
 
-		</div>
+    		<div class="span4">
 
-		<div class="span4">
+    			<h3>Chef Recipes</h3>
+    			
+    			<input id="search_input" type="text" class="typeahead" placeholder="Search..." />
+                <input type="hidden" name="cookbooks" />
+    			<div class="cookbook_container"></div>
 
-			<h3>Memory</h3>
+    		</div>
 
-			<input type="text" name="memory_size" />
+    		<div class="span4">
 
-			<select name="memory_size_unit">
-				<option value="MB">MB</option>
-				<option value="GB">GB</option>
-			</select>
+    			<h3>Memory</h3>
 
-			<h3>Forwarded Ports</h3>
-            <input type="hidden" name="ports" />
-			<input type="text" name="port_number" />
+    			<input type="text" name="memory_size" />
 
-			<button id="add_port" class="btn">Add Port</button>
+    			<select name="memory_size_unit">
+    				<option value="MB">MB</option>
+    				<option value="GB">GB</option>
+    			</select>
 
-			<div class="forwarded_port_container"></div>
+    			<h3>Forwarded Ports</h3>
+    			<input type="text" name="port_number" />
+    			<button id="add_port" class="btn">Add Port</button>
+                <input type="hidden" name="ports" />
 
-		</div>
+    			<div class="forwarded_port_container"></div>
 
-	</div>
+    		</div>
+    	</div>
 
-	<div class="row">
-
-		<div class="span12">
-
-			<button class="btn" type="submit" id="generate_env">Generate Environment</a>
-
-		</div>
-
-	</div>
-
-</form>
+    	<div class="row">
+    		<div class="span12">
+                <center>
+    			<button class="btn-primary" type="submit" id="generate_env">Generate Environment</a>
+                </center>
+    		</div>
+    	</div>
+    </form>
+</div>
+<!-- /container -->
 
 {% endblock %}

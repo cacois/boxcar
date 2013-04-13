@@ -1,13 +1,15 @@
 <!DOCTYPE HTML>
 
-<html>
+{% load staticfiles %}
 
+<html>
 	<head>
 
 		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 		<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
 
 		<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+		<link type="text/css" href="{% static 'boxcar/css/boxcar.css' %}" rel="stylesheet">
 
 		<script type="text/javascript">
 
@@ -54,8 +56,6 @@
 	</head>
 
 	<body>
-
-		<h1>Boxcar</h1>
 
 		{% block content %}{% endblock %}
 		
