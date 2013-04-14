@@ -107,6 +107,12 @@ def _download_cookbook(fileurl, download_dir):
   logger.info('Deleting %s' % tarfilepath)
   os.remove(tarfilepath)
 
+def cookbook_search(search_term):
+  return db.boxcar_cookbooks.find({'name': {'$regex':'^'+search_term}})
+
+def find_one_cookbook(name):
+  return db.boxcar_cookbooks.find_one({'name': name})
+
 def _generate_vagrantfile(box, app_name, memory, recipes, ports=None):
   """
   From a template, generate a custom vagrantfile as defined by user

@@ -10,10 +10,6 @@ from boxcar.models import Recipe
 
 logger = logging.getLogger(__name__)
 
-# mongodb stuff
-connection = MongoClient('localhost')
-db = connection.boxcar_cookbooks
-
 ## -- PAGES -- ##
 
 def home(request):
@@ -31,11 +27,10 @@ def get_cookbooks(request):
     search_term = request.POST.get('search_term', '')
 
     # Ok, I have a search term. Let's search...
-    # TODO: Make this a wildcard search that can return multiple results
-    cursor = db.boxcar_cookbooks.find({'name': {'$regex':'^'+search_term}})
+    found_cookbooks = vagrantgen.cookbook_search(search_term)
 
     cookbooks = []
-    for c in cursor:
+    for c in found_cookbooks:
         cookbooks.append(c['name'])
 
     return HttpResponse(json.dumps(cookbooks))
@@ -58,7 +53,7 @@ def create_environment(request):
     logger.info('Gathering cookbooks...')
     recipes =[]
     for cookbook in cookbooks:
-        recipes.append(Recipe( **db.boxcar_cookbooks.find_one({'name': cookbook}) ))
+        recipes.append(Recipe( **vagrantgen.find_one_cookbook(cookbook) ))
 
     # build environment zip package
     logger.info('Generating environment...')
