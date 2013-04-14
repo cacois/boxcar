@@ -42,8 +42,6 @@ def get_cookbooks(request):
 
 def create_environment(request):
 
-    print("POST: %s" %(request.POST))
-
     cookbooks = request.POST['cookbooks'].split(',')
     memory_size = request.POST['memory_size']
     memory_size_unit = request.POST['memory_size_unit']
@@ -62,7 +60,36 @@ def create_environment(request):
     for cookbook in cookbooks:
         recipes.append(Recipe( **db.boxcar_cookbooks.find_one({'name': cookbook}) ))
 
+    # build environment zip package
     logger.info('Generating environment...')
-    vagrantgen.build_package(base_box=base_box, app_name=app_name, memory=memory_size, recipes=recipes, ports=ports)
+    zipfile_path = vagrantgen.build_package(base_box=base_box, app_name=app_name, memory=memory_size, recipes=recipes, ports=ports)
 
-    return HttpResponse("Create Environment", mimetype="application/json")
+    # delete downloaded data
+    vagrantgen.cleanup()
+
+    return get_file_response(zipfile_path)
+
+## -- HELPER METHODS -- ##
+
+def get_file_response(filepath):
+    import os.path
+    import mimetypes
+
+    try:
+        fsock = open(filepath,"r")
+        filename = os.path.basename(filepath)
+
+        # take a guess at the mimetype of the specified file
+        mimetype = mimetypes.guess_type(filename)
+        
+        if mimetype is not None:
+            # create response
+            response = HttpResponse(fsock, mimetype=mimetype[0])
+
+        # add metadata to response
+        response['Content-Disposition'] = 'attachment; filename=' + filename 
+
+    except IOError:
+        response = HttpResponseNotFound()
+
+    return response

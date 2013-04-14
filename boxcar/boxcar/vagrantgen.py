@@ -7,7 +7,7 @@ import pymongo
 import time
 from pymongo import MongoClient
 import tarfile
-import os
+import os, shutil
 import logging
 from boxcar.models import Recipe
 
@@ -33,7 +33,7 @@ def build_package(base_box, app_name, memory, recipes, ports=None):
 
   # get directory to download temp files to
   download_dir = config.get('local', 'download_base_dir')
-  
+
   # if directory doesn't exist, create it
   if not os.path.exists(download_dir):
     os.makedirs(download_dir)
@@ -72,6 +72,8 @@ def build_package(base_box, app_name, memory, recipes, ports=None):
   # write the app dir to the zip
   zip.writestr('/%s/README.txt' % app_name, 'Hello from Boxcar! Put your application code in this directory.\n')
 
+  # return the filepath of the zip
+  return zipname
 
 def _download_cookbook(fileurl, download_dir):
   """
@@ -80,13 +82,13 @@ def _download_cookbook(fileurl, download_dir):
   """
 
   # download and save file to download_dir
-  logger.info('Downloading: %s' % fileurl)
+  logger.info('Downloading cookbook: %s' % fileurl)
   
   # get filename
   tarname = fileurl.split('/')[-1].split('?')[0]
   tarfilepath = download_dir + tarname
 
-  logger.info('Writing file to %s' % tarfilepath)
+  logger.info('Writing cookbook file to %s' % tarfilepath)
   
   with open(tarfilepath, 'w') as tmpfile:
     res = requests.get(fileurl)  
@@ -101,8 +103,8 @@ def _download_cookbook(fileurl, download_dir):
     except Exception as e:
       logger.error('Error extracting tarfile %s. Ex: %s' % (tarfilepath, e))
 
-  logger.info('Deleting %s' % tarfilepath)
   # delete the downloaded archive
+  logger.info('Deleting %s' % tarfilepath)
   os.remove(tarfilepath)
 
 def _generate_vagrantfile(box, app_name, memory, recipes, ports=None):
@@ -156,3 +158,11 @@ def _write_dir_to_zip(target_dir, zip, zip_path):
       # write to zip
       logger.info('Writing file %s to zip path %s%s/%s' % (full_path, zip_path, dir, path_from_base))
       zip.write(full_path, '%s%s/%s' % (zip_path, dir, path_from_base) )
+
+def cleanup():
+  download_dir = config.get('local', 'download_base_dir')
+
+  for base, dirs, files in os.walk(download_dir):
+    for dir in dirs:
+      shutil.rmtree(download_dir + dir)
+

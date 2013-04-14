@@ -41,8 +41,9 @@
 
                 console.log('Removing cookbook: ' + cookbook);
 
-                cookbooks.splice( $.inArray(cookbook,cookbooks) ,1 );
-
+                // remove cookbook
+                cookbooks.splice( $.inArray(cookbook,cookbooks), 1 );
+            
                 // update form
                 $(document).find("input[name='cookbooks']").val(cookbooks);
 
@@ -57,7 +58,9 @@
 
                 console.log('Removing port: ' + port);
 
-                ports.splice( $.inArray(port,ports) ,1 );
+                // remote port
+                ports.splice( $.inArray(port,ports), 1 );
+
                 // update form
                 $(document).find("input[name='ports']").val(ports);
 
