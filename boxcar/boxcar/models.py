@@ -1,6 +1,11 @@
 from django.db import models
 
 class Recipe:
+    """
+    A basic model class defining a recipe that can be instantiated
+    from a json-derived dict
+
+    """
     name = ''
     description = ''
     maintainer = ''

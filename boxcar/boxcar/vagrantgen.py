@@ -10,17 +10,13 @@ import tarfile
 import os, shutil
 import logging
 from boxcar.models import Recipe
+import cookbook_dao
 
 logger = logging.getLogger(__name__)
 
 # config stuff
 config = ConfigParser.RawConfigParser()
 config.read('boxcar.cfg')
-
-# mongodb stuff
-mongo_host = config.get('database', 'mongo_host')
-connection = MongoClient(mongo_host)
-db = connection.boxcar_cookbooks
 
 # Constants
 BASE_URL = config.get('api', 'base_url')
@@ -52,7 +48,7 @@ def build_package(base_box, app_name, memory, recipes, ports=None):
   logger.info('Writing recipes to zip...')
   for recipe in recipes:
     # download cookbook
-    _download_cookbook(recipe.fileurl, download_dir)
+    cookbook_dao.download_cookbook(recipe.fileurl, download_dir)
 
   cookbook_dirs = []
 
@@ -74,44 +70,6 @@ def build_package(base_box, app_name, memory, recipes, ports=None):
 
   # return the filepath of the zip
   return zipname
-
-def _download_cookbook(fileurl, download_dir):
-  """
-  Downloads a cookbook tar.gz, unzips it, and writes the 
-  directory structure to the zip file. 
-  """
-
-  # download and save file to download_dir
-  logger.info('Downloading cookbook: %s' % fileurl)
-  
-  # get filename
-  tarname = fileurl.split('/')[-1].split('?')[0]
-  tarfilepath = download_dir + tarname
-
-  logger.info('Writing cookbook file to %s' % tarfilepath)
-  
-  with open(tarfilepath, 'w') as tmpfile:
-    res = requests.get(fileurl)  
-    for chunk in res.iter_content(256):
-      tmpfile.write(chunk)
-
-  logger.info('Extracting contents of %s to %s' % (tarfilepath, download_dir))
-  # extract file to download_dir
-  with tarfile.open(tarfilepath) as tar:
-    try:
-      tar.extractall(download_dir)
-    except Exception as e:
-      logger.error('Error extracting tarfile %s. Ex: %s' % (tarfilepath, e))
-
-  # delete the downloaded archive
-  logger.info('Deleting %s' % tarfilepath)
-  os.remove(tarfilepath)
-
-def cookbook_search(search_term):
-  return db.boxcar_cookbooks.find({'name': {'$regex':'^'+search_term}})
-
-def find_one_cookbook(name):
-  return db.boxcar_cookbooks.find_one({'name': name})
 
 def _generate_vagrantfile(box, app_name, memory, recipes, ports=None):
   """
@@ -165,10 +123,5 @@ def _write_dir_to_zip(target_dir, zip, zip_path):
       logger.info('Writing file %s to zip path %s%s/%s' % (full_path, zip_path, dir, path_from_base))
       zip.write(full_path, '%s%s/%s' % (zip_path, dir, path_from_base) )
 
-def cleanup():
-  download_dir = config.get('local', 'download_base_dir')
 
-  for base, dirs, files in os.walk(download_dir):
-    for dir in dirs:
-      shutil.rmtree(download_dir + dir)
 

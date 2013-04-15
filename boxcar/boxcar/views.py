@@ -6,6 +6,7 @@ import json
 from pymongo import MongoClient
 from bson.json_util import dumps, default
 import vagrantgen
+import cookbook_dao
 from boxcar.models import Recipe
 
 logger = logging.getLogger(__name__)
@@ -27,7 +28,7 @@ def get_cookbooks(request):
     search_term = request.POST.get('search_term', '')
 
     # Ok, I have a search term. Let's search...
-    found_cookbooks = vagrantgen.cookbook_search(search_term)
+    found_cookbooks = cookbook_dao.cookbook_search(search_term)
 
     cookbooks = []
     for c in found_cookbooks:
@@ -53,14 +54,14 @@ def create_environment(request):
     logger.info('Gathering cookbooks...')
     recipes =[]
     for cookbook in cookbooks:
-        recipes.append(Recipe( **vagrantgen.find_one_cookbook(cookbook) ))
+        recipes.append(Recipe( **cookbook_dao.find_one_cookbook(cookbook) ))
 
     # build environment zip package
     logger.info('Generating environment...')
     zipfile_path = vagrantgen.build_package(base_box=base_box, app_name=app_name, memory=memory_size, recipes=recipes, ports=ports)
 
     # delete downloaded data
-    vagrantgen.cleanup()
+    cookbook_dao.cleanup()
 
     return get_file_response(zipfile_path)
 
