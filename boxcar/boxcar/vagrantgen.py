@@ -1,4 +1,3 @@
-import ConfigParser
 import requests
 import json
 from string import Template
@@ -11,15 +10,12 @@ import os, shutil
 import logging
 from boxcar.models import Recipe
 import cookbook_dao
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-# config stuff
-config = ConfigParser.RawConfigParser()
-config.read('boxcar.cfg')
-
 # Constants
-BASE_URL = config.get('api', 'base_url')
+BASE_URL = settings.COOKBOOK_API_BASE_URL
 
 def build_package(base_box, app_name, memory, recipes, ports=None):
   """
@@ -28,7 +24,7 @@ def build_package(base_box, app_name, memory, recipes, ports=None):
   """
 
   # get directory to download temp files to
-  download_dir = config.get('local', 'download_base_dir')
+  download_dir = settings.DOWNLOAD_BASE_DIR
 
   # if directory doesn't exist, create it
   if not os.path.exists(download_dir):

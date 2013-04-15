@@ -9,7 +9,7 @@ SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 COOKBOOK_API_BASE_URL = 'https://cookbooks.opscode.com/api/v1/'
 
 # Temp download folder
-TMP_DIR = '/tmp/boxcar/'
+DOWNLOAD_BASE_DIR = '/tmp/boxcar/'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -19,6 +19,8 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+
+MONGO_HOST = 'localhost'
 
 DATABASES = {
     'default': {

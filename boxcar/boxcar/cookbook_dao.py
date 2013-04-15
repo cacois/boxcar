@@ -1,18 +1,14 @@
-import ConfigParser
 import os, shutil
 import tarfile
 import logging
 from pymongo import MongoClient
 import requests
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-# config stuff
-config = ConfigParser.RawConfigParser()
-config.read('boxcar.cfg')
-
 # mongodb stuff
-mongo_host = config.get('database', 'mongo_host')
+mongo_host = settings.MONGO_HOST
 connection = MongoClient(mongo_host)
 db = connection.boxcar_cookbooks
 
@@ -69,7 +65,7 @@ def cleanup():
   during package generation process
 
   """
-  download_dir = config.get('local', 'download_base_dir')
+  download_dir = settings.DOWNLOAD_BASE_DIR
 
   for base, dirs, files in os.walk(download_dir):
     for dir in dirs:
