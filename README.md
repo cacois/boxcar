@@ -1,3 +1,3 @@
-### Boxcar
+### Boxcar: Put Vagrant on Rails
 
-Generate custom Vagrant environment configurations with a few clicks.
+Create a custom Vagrant environment with just a few clicks. Boxcar will generate custom Vagrant environment configurations for you (even downloading and unpacking Chef recipes), automatically
