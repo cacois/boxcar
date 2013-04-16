@@ -7,6 +7,7 @@ from django.conf.urls import patterns, include, url
 urlpatterns = patterns('',
     url(r'^$', 'boxcar.views.home'),
     url(r'^generate$', 'boxcar.views.generate'),
+    url(r'^about$', 'boxcar.views.about'),
     url(r'^get_cookbooks/$', 'boxcar.views.get_cookbooks'),
     url(r'^create_environment/$', 'boxcar.views.create_environment')
     # Examples:

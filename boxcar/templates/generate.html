@@ -127,7 +127,7 @@
     </div>
 </div>
 
-<div class="container">
+<div class="container" style="height:100%">
     <h1>
         Boxcar
     </h1>
@@ -136,24 +136,28 @@
         just for you!
     </p>
 
-    <form id="generate_form" method="post" action="{% url 'boxcar.views.create_environment' %}">
+    <form id="generate_form" method="post" action="{% url 'boxcar.views.create_environment' %}" style="height:80%">
     	{% csrf_token %}
 
-    	<div class="row">
-    		<div class="span4">
+    	<div class="row" style="height:80%">
+    		<div class="span4" style="height:80%">
+                <h3>Project Name</h3>
+
+                <input type="text" name="project_name" placeholder="Name of the project..." />
+
                 <h3>Base Box Name</h3>
 
                 <input type="text" name="base_box_name" placeholder="Name of Vagrant base box..." />
 
-    			<h3>Boxes</h3>
+    			<!--<h3>Boxes</h3>
 
-    			<div class="box_container"></div>
+                <div class="box_container"></div>
 
-    			<a href="#" class="btn">Add Box</a>
+                <a href="#" class="btn">Add Box</a>-->
 
     		</div>
 
-    		<div class="span4">
+    		<div class="span4" style="height:80%">
 
     			<h3>Chef Recipes</h3>
     			
@@ -163,20 +167,22 @@
 
     		</div>
 
-    		<div class="span4">
+    		<div class="span4" style="height:80%">
 
     			<h3>Memory</h3>
 
-    			<input type="text" name="memory_size" />
-
-    			<select name="memory_size_unit">
-    				<option value="MB">MB</option>
-    				<option value="GB">GB</option>
-    			</select>
+                <div>
+        			<input  type="text" name="memory_size" />
+                    <select name="memory_size_unit">
+    	                <option value="MB">MB</option>
+    		      		<option value="GB">GB</option>
+    			    </select>
+                </div>
 
     			<h3>Forwarded Ports</h3>
     			<input type="text" name="port_number" />
     			<button id="add_port" class="btn">Add Port</button>
+                
                 <input type="hidden" name="ports" />
 
     			<div class="forwarded_port_container"></div>
@@ -187,7 +193,7 @@
     	<div class="row">
     		<div class="span12">
                 <center>
-    			<button class="btn-primary" type="submit" id="generate_env">Generate Environment</a>
+    			<button class="btn btn-large btn-primary" type="submit" id="generate_env">Generate Environment</a>
                 </center>
     		</div>
     	</div>

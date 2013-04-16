@@ -21,6 +21,10 @@ def generate(request):
 
     return render_to_response('generate.html', {}, context_instance=RequestContext(request))
 
+def about(requesr):
+
+    return "About"
+
 ## -- AJAX -- ##
 
 def get_cookbooks(request):
@@ -43,8 +47,9 @@ def create_environment(request):
     memory_size_unit = request.POST['memory_size_unit']
     ports = request.POST['ports'].split(',')
     base_box = request.POST['base_box_name']
-    app_name = 'app'
+    app_name = request.POST['project_name']
 
+    print 'app_name: ',app_name
     print 'cookbooks: ',cookbooks
     print 'memory_size: ',memory_size
     print 'memory_size_unit: ',memory_size_unit
