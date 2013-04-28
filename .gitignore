@@ -7,3 +7,4 @@ Vagrantfile
 .vagrant
 *.zip
 build/
+django2openshift.py

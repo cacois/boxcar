@@ -4,11 +4,13 @@ import logging
 from pymongo import MongoClient
 import json
 from django.conf import settings
+import sys
 
 # logging stuff
 logger = logging.getLogger('boxcar')
 logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.FileHandler('boxcar.log'))
+logger.addHandler(logging.StreamHandler(sys.stdout))
 
 # mongodb stuff
 connection = MongoClient('localhost')
