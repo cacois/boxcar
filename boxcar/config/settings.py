@@ -2,6 +2,11 @@
 import os
 import django
 
+# a setting to determine whether we are running on OpenShift
+ON_OPENSHIFT = False
+if os.environ.has_key('OPENSHIFT_REPO_DIR'):
+    ON_OPENSHIFT = True
+
 DJANGO_ROOT = os.path.dirname(os.path.realpath(django.__file__))
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
@@ -34,6 +39,13 @@ DATABASES = {
     }
 }
 
+if ON_OPENSHIFT:
+    MONGO_HOST = os.environ['OPENSHIFT_MONGODB_DB_HOST']
+    MONGO_PORT = int(os.environ['OPENSHIFT_MONGODB_DB_PORT'])
+else:
+    MONGO_HOST = 'localhost'
+    MONGO_PORT = 27017
+    
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
@@ -97,8 +109,17 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = ')9s47$u(e^n+z=*)xqzfdia1ve1+1z+#v$3^0&z25&382yz0wt'
+default_keys = {'SECRET_KEY': ')9s47$u(e^n+z=*)xqzfdia1ve1+1z+#v$3^0&z25&382yz0wt' }
 
+# Replace default keys with dynamic values if we are in OpenShift
+use_keys = default_keys
+if ON_OPENSHIFT:
+    imp.find_module('openshiftlibs')
+    import openshiftlibs
+    use_keys = openshiftlibs.openshift_secure(default_keys)
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = use_keys['SECRET_KEY']
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
